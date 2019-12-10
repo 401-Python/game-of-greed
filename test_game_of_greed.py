@@ -106,3 +106,9 @@ def test_leftover_fives():
   leftovers = test_game.calculate_score((3, 3, 3, 4, 5, 4))
   score = 350
   assert leftovers == score
+
+def test_grand_mcflurry():
+  test_game = GameOfGreed()
+  mcflurry = test_game.calculate_score((5, 5, 5, 5, 1, 1))
+  score = 2000
+  assert mcflurry == score
