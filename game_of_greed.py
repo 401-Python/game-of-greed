@@ -2,7 +2,6 @@ import collections
 import random
 import math
 
-
 class GameOfGreed():
 
     def __init__(self):
@@ -12,6 +11,12 @@ class GameOfGreed():
         score = 0
         pairs = 0
         c = collections.Counter(dice_roll)
+
+        '''handles mcflurry case'''
+        if c[5] == 4 and c[1] == 2:
+          print('A GRAND MCFLURRY')
+          score += 2000
+          return score
 
         '''Handles straights'''
         if 1 in c and 2 in c and 3 in c and 4 in c and 5 in c and 6 in c:
