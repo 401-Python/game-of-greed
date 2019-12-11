@@ -269,7 +269,80 @@ def test_roll_dice(game):
   expected = 0
   assert actual == expected
 
+
 def test_pairs_ones_fives(game):
     actual = game.calculate_score((1, 1, 2, 2, 5, 5))
     assert actual == 1500
-  
+
+
+def test_final_round():
+    flow = {
+        'prints': [
+            'Welcome to the Game of Greed!',
+            'Game over! Your final score is 100',
+
+        ],
+        'prompts': [
+            'Wanna play? Type y to roll',
+            'Would you like to keep 1? y for yes : n for no ',
+            'Would you like to keep 2? y for yes : n for no ',
+            'Would you like to keep 2? y for yes : n for no ',
+            'Would you like to keep 3? y for yes : n for no ',
+            'Would you like to keep 3? y for yes : n for no ',
+            'Would you like to keep 4? y for yes : n for no ',
+        
+        ],
+        'responses': [
+            'y', 'y', 'y', 'y', 'y', 'y', 'y'
+        ],
+        'rolls': [
+            [1, 2, 2, 3, 3, 4],
+      
+        ]
+    }
+
+    mp = MockPlayer(**flow)
+
+    game = Game(mp.mock_print, mp.mock_input, 9)
+
+    game.roll_dice = mp.mock_roll
+
+    game.play_game()
+
+    assert mp.mop_up()
+
+
+
+
+class MockPlayer:
+    def __init__(self, prints=[], prompts=[], responses=[], rolls=[]):
+        self.prints = prints
+        self.prompts = prompts
+        self.responses = responses
+        self.rolls = rolls
+
+    def mock_print(self, *args):
+        if len(self.prints):
+            current_print = self.prints.pop(0)
+            assert args[0] == current_print
+
+    def mock_input(self, *args):
+        if len(self.prompts):
+            current_prompt = self.prompts.pop(0)
+            assert args[0] == current_prompt
+
+        if len(self.responses):
+            current_response = self.responses.pop(0)
+            return current_response
+
+    def mock_roll(self, num_dice):
+        if len(self.rolls):
+            current_roll = self.rolls.pop(0)
+            return current_roll
+
+    def mop_up(self):
+        assert len(self.prints) == 0
+        assert len(self.prompts) == 0
+        assert len(self.responses) == 0
+        assert len(self.rolls) == 0
+        return True
