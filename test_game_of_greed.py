@@ -1,20 +1,20 @@
-from game_of_greed import GameOfGreed
+from game_of_greed import Game
 import pytest
 
 def test_non_scoring_roll():
-  test_game = GameOfGreed()
+  test_game = Game()
   actual = test_game.calculate_score((2, 3, 4, 6, 3, 2))
   expected = 0
   assert actual == expected
 
 def test_ones():
-  test_game = GameOfGreed()
+  test_game = Game()
   actual = test_game.calculate_score((3, 1, 2, 1, 4, 4))
   expected = 200
   assert actual == expected
 
 def test_twos():
-  test_game = GameOfGreed()
+  test_game = Game()
   three_twos = test_game.calculate_score((2, 2, 2, 3, 4, 4))
   three_twos_score = 200
 
@@ -25,7 +25,7 @@ def test_twos():
   assert three_twos == three_twos_score
 
 def test_threes():
-  test_game = GameOfGreed()
+  test_game = Game()
   three_threes = test_game.calculate_score((3, 3, 2, 3, 4, 4))
   three_threes_score = 300
 
@@ -36,7 +36,7 @@ def test_threes():
   assert three_threes == three_threes_score
 
 def test_fours():
-  test_game = GameOfGreed()
+  test_game = Game()
   three_fours = test_game.calculate_score((4, 3, 2, 3, 4, 4))
   three_fours_score = 400
 
@@ -47,7 +47,7 @@ def test_fours():
   assert five_fours == five_fours_score
 
 def test_fives():
-  test_game = GameOfGreed()
+  test_game = Game()
   three_fives = test_game.calculate_score((5, 3, 2, 3, 5, 5))
   three_fives_score = 500
 
@@ -62,7 +62,7 @@ def test_fives():
   assert two_fives == two_fives_score
 
 def test_sixes():
-  test_game = GameOfGreed()
+  test_game = Game()
   three_sixes = test_game.calculate_score((6, 3, 2, 3, 6, 6))
   three_sixes_score = 600
 
@@ -73,19 +73,19 @@ def test_sixes():
   assert five_sixes == five_sixes_score
 
 def test_straight():
-  test_game = GameOfGreed()
+  test_game = Game()
   straight = test_game.calculate_score((4, 2, 6, 3, 1, 5))
   score = 1500
   assert straight == score
 
 def test_three_pairs():
-  test_game = GameOfGreed()
+  test_game = Game()
   three_pairs = test_game.calculate_score((1, 2, 3, 3, 2, 1))
   score = 1500
   assert three_pairs == score
 
 def test_two_trios():
-  test_game = GameOfGreed()
+  test_game = Game()
   two_trios_ones = test_game.calculate_score((1, 3, 1, 3, 1, 3))
   score_ones = 1300
 
@@ -96,19 +96,19 @@ def test_two_trios():
   assert two_trios_ones == score_ones
 
 def test_leftover_ones():
-  test_game = GameOfGreed()
+  test_game = Game()
   leftovers = test_game.calculate_score((1, 1, 1, 4, 5, 1))
   score = 2050
   assert leftovers == score
 
 def test_leftover_fives():
-  test_game = GameOfGreed()
+  test_game = Game()
   leftovers = test_game.calculate_score((3, 3, 3, 4, 5, 4))
   score = 350
   assert leftovers == score
 
 def test_grand_mcflurry():
-  test_game = GameOfGreed()
+  test_game = Game()
   mcflurry = test_game.calculate_score((5, 5, 5, 5, 1, 1))
   score = 2000
   assert mcflurry == score
