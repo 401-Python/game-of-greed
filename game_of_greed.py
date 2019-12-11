@@ -2,7 +2,12 @@ import collections
 import random
 import math
 
-class GameOfGreed():
+
+class Game():
+    available_dice = 6
+    current_round = 1
+    bank = 0
+    total_score = 0
 
     def __init__(self):
         pass
@@ -14,12 +19,13 @@ class GameOfGreed():
 
         '''handles mcflurry case'''
         if c[5] == 4 and c[1] == 2:
-          print('A GRAND MCFLURRY')
-          score += 2000
-          return score
+            print('A GRAND MCFLURRY')
+            score += 2000
+            return score
 
-        '''Handles straights'''
-        if 1 in c and 2 in c and 3 in c and 4 in c and 5 in c and 6 in c:
+        '''Handles straights, if the counter length is 6
+        it means there's one of each dice roll'''
+        if len(c) == 6:
             score += 1500
             return score
 
@@ -47,13 +53,17 @@ class GameOfGreed():
                 for i in range(c[i]):
                     score += 1000
                 continue
-              
+
             '''handles trios of any roll other than one, and any leftovers'''
             if c[i] >= 3 and i != 1:
+                multiplyer = i
                 score += (i * 100)
-                c[i] -= 3
-                for i in range(c[i]):
-                    score += 100
+                leftovers = c[i] - 3
+                while leftovers > 0:
+                    print('m', multiplyer)
+                    print('c', leftovers)
+                    score += (multiplyer * 100)
+                    leftovers -=1
                 continue
 
         return score
@@ -63,13 +73,102 @@ class GameOfGreed():
 
     def play_game(self):
         self.greeting()
-        wanna_play = input('Wanna play? ')
+        wanna_play = input('Wanna play? Type y to roll')
         if wanna_play == 'y':
-            print('Great! Check back tomorrow! :D')
+            self.choose_keepers(self.roll_dice())
         else:
             print('OK. Maybe another time')
 
+    def roll_dice(self):
+
+        '''
+        This method generates a dice roll using the available_dice state. 
+        It generates up to 6 random numbers between 1 and 6, and returns a tuple of those numbers. 
+        If the roll would result in a score of zero, we reset the bank, available dice, and increment the round
+        '''
+
+        dice = []
+        for i in range(self.available_dice):
+            dice.append(random.randint(1, 6))
+            roll = tuple(dice)
+        print('You rolled ' + str(roll))
+        if self.available_dice == 0:
+            return ()
+        return roll
+
+    def choose_keepers(self, dice_roll):
+        '''
+        This method accepts a tuple and allows the user to select which dice to add to their score.
+        We begin by iterating through the tuple, and prompting the user for an input of y or n.
+        If the user responds with y, the corresponding dice is added to a list.
+        After we've gone through the entire tuple, we take our list of keepers and
+        pass it into our calculate score function, bank it, then the roll_again func
+        '''
+        keepers = []
+
+        for dice in dice_roll:
+            pickem = input(
+                f'Would you like to keep {dice}? y for yes : n for no ')
+            if pickem == 'y':
+                keepers.append(dice)
+                self.available_dice -= 1
+        score = self.calculate_score(tuple(keepers))
+        self.bank += score
+        self.roll_again()
+
+        return tuple(keepers)
+
+    def roll_again(self):
+        '''This function lets the user continue rolling for a higher score.
+        It first checks if the user still has any dice remaining, if they do, they're prompted
+        to roll again, if they choose y, we roll and make sure it's a scoring roll.
+        If it's not a scoring roll, their bank is reset to 0 and the next round starts.
+        If it is a scoring roll, they get to choose keepers again.
+        If they elect not to roll again, whatever is in their bank is added to the total score
+        and we call the start_next_round function
+        '''
+        if self.available_dice > 0:
+            roll_again = input(
+                f'You have {self.bank} points banked, and {self.available_dice} dice remaining. Would you like to risk them and roll again? ')
+            if roll_again == 'y':
+                roll = self.roll_dice()
+                gamble = self.calculate_score(roll)
+                if gamble == 0:
+                    self.bank == 0
+                    print('Sorry, you just lost everything!')
+                    self.start_next_round()
+
+                else:
+                    print(
+                        f'Greed paid off!')
+                    self.choose_keepers(roll)
+
+            elif roll_again == 'n':
+                print(
+                    f'Smart move, take the money and run! {self.bank} points added to your total')
+                self.total_score += self.bank
+                self.start_next_round()
+
+        elif self.available_dice == 0:
+            self.total_score += self.bank
+            self.start_next_round()
+
+    def show_score(self):
+        print(f'your current score is {self.total_score}')
+
+    def start_next_round(self):
+        '''This function increments essentially sets the state for the next round by
+        incrementing the current round, resetting the bank to 0 and available_dice to 6.
+        Total_score is maintained throughout the game until the end
+        '''
+        self.current_round += 1
+        print(
+            f'Get ready for round {self.current_round}! Current score: {self.total_score}')
+        self.bank = 0
+        self.available_dice = 6
+        self.choose_keepers(self.roll_dice())
+
 
 if __name__ == "__main__":
-    new_game = GameOfGreed()
+    new_game = Game()
     new_game.play_game()
