@@ -1,16 +1,18 @@
 import collections
 import random
 import math
+import sys
 
 
 class Game():
-    available_dice = 6
-    current_round = 1
-    bank = 0
-    total_score = 0
+    
 
     def __init__(self):
-        pass
+      self.available_dice = 6
+      self.current_round = 1
+      self.bank = 0
+      self.total_score = 0
+      self.zilch_count = 0
 
     def calculate_score(self, dice_roll):
         score = 0
@@ -60,8 +62,6 @@ class Game():
                 score += (i * 100)
                 leftovers = c[i] - 3
                 while leftovers > 0:
-                    print('m', multiplyer)
-                    print('c', leftovers)
                     score += (multiplyer * 100)
                     leftovers -=1
                 continue
@@ -79,23 +79,19 @@ class Game():
         else:
             print('OK. Maybe another time')
 
-    def roll_dice(self, available_dice):
+    def roll_dice(self, available_dice=None):
 
         '''
         This method generates a dice roll using the available_dice state. 
         It generates up to 6 random numbers between 1 and 6, and returns a tuple of those numbers. 
         If the roll would result in a score of zero, we reset the bank, available dice, and increment the round
         '''
-        if not available_dice:
+        if available_dice == None:
           available_dice = self.available_dice
-        dice = []
         if available_dice == 0:
             return ()
-        for i in range(available_dice):
-            dice.append(random.randint(1, 6))
-            roll = tuple(dice)
+        roll = tuple(random.randint(1, 6) for i in range(available_dice))
         print('You rolled ' + str(roll))
-       
         return roll
 
     def choose_keepers(self, dice_roll):
@@ -114,10 +110,18 @@ class Game():
             if pickem == 'y':
                 keepers.append(dice)
                 self.available_dice -= 1
+
         score = self.calculate_score(tuple(keepers))
         self.bank += score
+        if score == 0:
+          self.zilch_count += 1
+          if self.zilch_count == 3:
+            print('Oof. Three straight zeros. Take this L')
+            sys.exit()
+          print(f'You have {self.zilch_count} consecutive zilches, {3 - self.zilch_count} more and you lose!')
+          self.start_next_round()
+        
         self.roll_again()
-
         return tuple(keepers)
 
     def roll_again(self):
