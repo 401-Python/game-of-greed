@@ -75,25 +75,27 @@ class Game():
         self.greeting()
         wanna_play = input('Wanna play? Type y to roll')
         if wanna_play == 'y':
-            self.choose_keepers(self.roll_dice())
+            self.choose_keepers(self.roll_dice(self.available_dice))
         else:
             print('OK. Maybe another time')
 
-    def roll_dice(self):
+    def roll_dice(self, available_dice):
 
         '''
         This method generates a dice roll using the available_dice state. 
         It generates up to 6 random numbers between 1 and 6, and returns a tuple of those numbers. 
         If the roll would result in a score of zero, we reset the bank, available dice, and increment the round
         '''
-
+        if not available_dice:
+          available_dice = self.available_dice
         dice = []
-        for i in range(self.available_dice):
+        if available_dice == 0:
+            return ()
+        for i in range(available_dice):
             dice.append(random.randint(1, 6))
             roll = tuple(dice)
         print('You rolled ' + str(roll))
-        if self.available_dice == 0:
-            return ()
+       
         return roll
 
     def choose_keepers(self, dice_roll):
@@ -129,7 +131,7 @@ class Game():
         '''
         if self.available_dice > 0:
             roll_again = input(
-                f'You have {self.bank} points banked, and {self.available_dice} dice remaining. Would you like to risk them and roll again? ')
+                f'You have {self.bank} points ready to bank, and {self.available_dice} dice remaining. Would you like to risk them and roll again? ')
             if roll_again == 'y':
                 roll = self.roll_dice()
                 gamble = self.calculate_score(roll)

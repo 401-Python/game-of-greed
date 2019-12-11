@@ -1,6 +1,7 @@
 from game_of_greed import Game
 import pytest
 
+
 @pytest.fixture
 def game():
     return Game()
@@ -237,14 +238,30 @@ def test_for_leftover_fives(game):
     actual = game.calculate_score([3, 3, 3, 5, 5])
     assert actual == expected
 
+
 def test_for_two_trios(game):
     # 200 for 2s + 300 for 3s
     expected = 500
     actual = game.calculate_score([2, 2, 2, 3, 3, 3])
     assert actual == expected
-    
+
     # 1000 for 1s + 400 for 4s
     # acual ==
     expected = 1400
     actual = game.calculate_score([1, 1, 1, 4, 4, 4])
     assert actual == expected
+
+
+def test_roll_dice(game):
+  actual = len(game.roll_dice(3))
+  expected = 3
+  assert actual == expected
+
+  actual = len(game.roll_dice(4))
+  expected = 4
+  assert actual == expected
+
+  actual = len(game.roll_dice(2))
+  expected = 2
+  assert actual == expected
+
