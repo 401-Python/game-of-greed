@@ -56,10 +56,14 @@ class Game():
 
             '''handles trios of any roll other than one, and any leftovers'''
             if c[i] >= 3 and i != 1:
+                multiplyer = i
                 score += (i * 100)
-                c[i] -= 3
-                for i in range(c[i]):
-                    score += 100
+                leftovers = c[i] - 3
+                while leftovers > 0:
+                    print('m', multiplyer)
+                    print('c', leftovers)
+                    score += (multiplyer * 100)
+                    leftovers -=1
                 continue
 
         return score
@@ -76,16 +80,30 @@ class Game():
             print('OK. Maybe another time')
 
     def roll_dice(self):
+
+        '''
+        This method generates a dice roll using the available_dice state. 
+        It generates up to 6 random numbers between 1 and 6, and returns a tuple of those numbers. 
+        If the roll would result in a score of zero, we reset the bank, available dice, and increment the round
+        '''
+
         dice = []
         for i in range(self.available_dice):
             dice.append(random.randint(1, 6))
             roll = tuple(dice)
         print('You rolled ' + str(roll))
         if self.available_dice == 0:
-          return ()
+            return ()
         return roll
 
     def choose_keepers(self, dice_roll):
+        '''
+        This method accepts a tuple and allows the user to select which dice to add to their score.
+        We begin by iterating through the tuple, and prompting the user for an input of y or n.
+        If the user responds with y, the corresponding dice is added to a list.
+        After we've gone through the entire tuple, we take our list of keepers and
+        pass it into our calculate score function, bank it, then the roll_again func
+        '''
         keepers = []
 
         for dice in dice_roll:
@@ -101,33 +119,54 @@ class Game():
         return tuple(keepers)
 
     def roll_again(self):
-        roll_again = input(
-            f'You have {self.bank} points banked, and {self.available_dice} dice remaining. Would you like to risk them and roll again? ')
-        if roll_again == 'y':
-            roll = self.roll_dice()
-            gamble = self.calculate_score(roll)
-            if gamble == 0:
-                self.bank == 0
-                print('Sorry, you just lost everything!')
-                self.start_next_round()
-            else:
-                self.total_score += (gamble + self.bank)
+        '''This function lets the user continue rolling for a higher score.
+        It first checks if the user still has any dice remaining, if they do, they're prompted
+        to roll again, if they choose y, we roll and make sure it's a scoring roll.
+        If it's not a scoring roll, their bank is reset to 0 and the next round starts.
+        If it is a scoring roll, they get to choose keepers again.
+        If they elect not to roll again, whatever is in their bank is added to the total score
+        and we call the start_next_round function
+        '''
+        if self.available_dice > 0:
+            roll_again = input(
+                f'You have {self.bank} points banked, and {self.available_dice} dice remaining. Would you like to risk them and roll again? ')
+            if roll_again == 'y':
+                roll = self.roll_dice()
+                gamble = self.calculate_score(roll)
+                if gamble == 0:
+                    self.bank == 0
+                    print('Sorry, you just lost everything!')
+                    self.start_next_round()
+
+                else:
+                    print(
+                        f'Greed paid off!')
+                    self.choose_keepers(roll)
+
+            elif roll_again == 'n':
                 print(
-                    f'Greed paid off!')
-                self.choose_keepers(roll)
-        elif roll_again == 'n':
-          print(f'Smart move, take the money and run! {self.bank} points added to your total')
-          self.total_score += self.bank
-    
+                    f'Smart move, take the money and run! {self.bank} points added to your total')
+                self.total_score += self.bank
+                self.start_next_round()
+
+        elif self.available_dice == 0:
+            self.total_score += self.bank
+            self.start_next_round()
+
     def show_score(self):
-      print(f'your current score is {self.total_score}')
-    
+        print(f'your current score is {self.total_score}')
+
     def start_next_round(self):
-      self.current_round +=1
-      print(f'Get ready for round {self.current_round}! Current score: {self.total_score}')
-      self.bank = 0
-      self.available_dice = 6
-      self.choose_keepers(self.roll_dice())
+        '''This function increments essentially sets the state for the next round by
+        incrementing the current round, resetting the bank to 0 and available_dice to 6.
+        Total_score is maintained throughout the game until the end
+        '''
+        self.current_round += 1
+        print(
+            f'Get ready for round {self.current_round}! Current score: {self.total_score}')
+        self.bank = 0
+        self.available_dice = 6
+        self.choose_keepers(self.roll_dice())
 
 
 if __name__ == "__main__":

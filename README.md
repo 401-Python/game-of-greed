@@ -39,14 +39,7 @@ NOTE: use Dependency Injection to handle input/output.
   pytest
   ptw
   
-def next_round(self):
-      print(f'Get ready for round {self.current_round}! Current score: {self.total_score}')
-      self.bank = 0
-      self.available_dice = 6
-      self.choose_keepers(self.roll_dice())
 
 
-      '''This method generates a dice roll using the available_dice state
-      It generates up to 6 random numbers between 1 and 6, and returns a tuple of those numbers
-      If the roll would result in a score of zero, we reset the bank, available dice, and increment
-      the round'''
+
+     
