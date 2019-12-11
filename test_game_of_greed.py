@@ -265,3 +265,11 @@ def test_roll_dice(game):
   expected = 2
   assert actual == expected
 
+  actual = len(game.roll_dice(0))
+  expected = 0
+  assert actual == expected
+
+def test_pairs_ones_fives(game):
+    actual = game.calculate_score((1, 1, 2, 2, 5, 5))
+    assert actual == 1500
+  
