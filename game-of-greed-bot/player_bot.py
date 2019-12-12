@@ -23,7 +23,7 @@ class LazyPlayer:
         return 'n'
 
 
-class ParticipationTrophyPlayer:
+class NotThatSmart:
 
     def __init__(self):
         self.roll = None
@@ -90,7 +90,7 @@ class ParticipationTrophyPlayer:
 
 
 if __name__ == "__main__":
-    bot = ParticipationTrophyPlayer()
+    bot = NotThatSmart()
     game = Game(bot._print, bot._input)
     bot.game = game
     game.play(10)
