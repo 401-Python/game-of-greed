@@ -283,7 +283,7 @@ def test_final_round():
 
         ],
         'prompts': [
-            'Wanna play? Type y to roll',
+            'Wanna play? Type y to roll ',
             'Would you like to keep 1? y for yes : n for no ',
             'Would you like to keep 2? y for yes : n for no ',
             'Would you like to keep 2? y for yes : n for no ',
