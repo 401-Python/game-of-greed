@@ -75,7 +75,7 @@ class Game():
 
     def play_game(self):
         self.greeting()
-        wanna_play = self._input('Wanna play? Type y to roll')
+        wanna_play = self._input('Wanna play? Type y to roll ')
         if wanna_play == 'y':
             self.choose_keepers(self.roll_dice(self.available_dice))
         else:
@@ -112,8 +112,6 @@ class Game():
             if pickem == 'y':
                 self.available_dice -= 1
                 keepers.append(dice)
-            # if pickem != 'y' or pickem != 'n':
-            #   self._print('boy you dumb')
 
         score = self.calculate_score(tuple(keepers))
         self.bank += score
