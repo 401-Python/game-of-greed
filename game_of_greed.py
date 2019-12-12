@@ -73,6 +73,14 @@ class Game():
     def greeting(self):
         self._print('Welcome to the Game of Greed!')
 
+    def check_zilch_status(self):
+      if self.zilch_count < 3:
+          self._print(f'You have {self.zilch_count} consecutive zilches, {3 - self.zilch_count} more and you lose!')
+
+      if self.zilch_count == 3:
+          self._print('Oof. Three straight zeros. Take this L')
+          sys.exit()
+
     def play_game(self):
         self.greeting()
         wanna_play = self._input('Wanna play? Type y to roll ')
@@ -117,10 +125,7 @@ class Game():
         self.bank += score
         if score == 0:
           self.zilch_count += 1
-          if self.zilch_count == 3:
-            self._print('Oof. Three straight zeros. Take this L')
-            sys.exit()
-          self._print(f'You have {self.zilch_count} consecutive zilches, {3 - self.zilch_count} more and you lose!')
+          self.check_zilch_status()
           self.start_next_round()
         
         self.roll_again()
@@ -144,6 +149,7 @@ class Game():
                 if gamble == 0:
                     self.bank == 0
                     self._print('Sorry, you just lost everything!')
+                    self.zilch_count += 1
                     self.start_next_round()
 
                 else:
