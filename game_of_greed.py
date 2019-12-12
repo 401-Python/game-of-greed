@@ -112,9 +112,12 @@ class Game():
         After we've gone through the entire tuple, we take our list of keepers and
         pass it into our calculate score function, bank it, then the roll_again func
         '''
-        keepers = []
 
-        for dice in dice_roll:
+        keepers = []
+        c = collections.Counter(dice_roll)
+
+        for dice in c.elements():
+          if len(c) == 3 and dice in c or c[dice] >= 3 or dice == 1 or dice == 5:
             pickem = self._input(
                 f'Would you like to keep {dice}? y for yes : n for no ')
             if pickem == 'y':
@@ -150,6 +153,7 @@ class Game():
                     self.bank == 0
                     self._print('Sorry, you just lost everything!')
                     self.zilch_count += 1
+                    self.check_zilch_status()
                     self.start_next_round()
 
                 else:
